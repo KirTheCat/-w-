@@ -1,10 +1,16 @@
 import React, { Component } from 'react';
-import Table from './Table';
 import Form from './Form';
+import UserCard from './UserCard';
+import Table from './Table';
 
 class App extends Component {
     state = {
-        characters: []
+        characters: [
+            { name: 'Иван', last_name: 'Петров', email: 'i_Petrov@example.com' },
+            { name: 'Петр', last_name: 'Иванов', email: 'P_Ivanov@example.com' },
+            { name: 'Марк', last_name: 'Аврээлиев', email: 'MarkusBigDick_23@example.com' }
+        ],
+         view: 'table'
     };
 
     removeCharacter = index => {
@@ -19,19 +25,36 @@ class App extends Component {
         this.setState({ characters: [...this.state.characters, character] });
     }
 
+    toggleView = () => {
+      this.setState({ view: this.state.view === 'table' ? 'cards' : 'table' });
+  }
+
     render() {
-        const { characters } = this.state;
+        const { characters,view } = this.state;
         
         return (
-            <div className="container">
-                <h1>Пользователи</h1>
-                <Table
-                    characterData={characters}
-                    removeCharacter={this.removeCharacter}
-                />
-                <h3>Добавить</h3>
-                <Form handleSubmit={this.handleSubmit} />
-            </div>
+          <div className="container">
+          <button onClick={this.toggleView}>
+              {view === 'table' ? 'Показать карточки' : 'Показать таблицу'}
+          </button>
+          {view === 'table' ? (
+              <Table 
+                  characterData={characters} 
+                  removeCharacter={this.removeCharacter} 
+              />
+          ) : (
+              <div className="card-container">
+                  {characters.map((character, index) => (
+                      <UserCard 
+                          key={index} 
+                          user={character} 
+                          removeCharacter={() => this.removeCharacter(index)} 
+                      />
+                  ))}
+              </div>
+          )}
+          <Form handleSubmit={this.handleSubmit} />
+      </div>
         );
     }
 }
