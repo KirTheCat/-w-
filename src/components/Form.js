@@ -13,6 +13,12 @@ class Form extends Component {
         this.state = this.initialState;
     }
 
+    componentDidUpdate(prevProps) {
+        if (this.props.character !== prevProps.character) {
+            this.setState(this.props.character);
+        }
+    }
+
     handleChange = event => {
         const { name, value } = event.target;
 

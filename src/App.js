@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
-import Form from './Form';
-import UserCard from './UserCard';
-import Table from './Table';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import Form from './components/Form';
+import UserCard from './components/UserCard';
+import TableComponent from './components/Table';
+
+
+const theme = createTheme();
 
 class App extends Component {
     state = {
@@ -10,15 +14,29 @@ class App extends Component {
             { name: 'Петр', last_name: 'Иванов', email: 'P_Ivanov@example.com' },
             { name: 'Марк', last_name: 'Аврээлиев', email: 'MarkusBigDick_23@example.com' }
         ],
-         view: 'table'
+        view: 'table',
+        editingIndex: null,
+        editingCharacter: { name: '', last_name: '', email: '' }
     };
 
     removeCharacter = index => {
         const { characters } = this.state;
-    
         this.setState({
             characters: characters.filter((character, i) => i !== index)
         });
+    }
+
+    changeCharacter = index => {
+        this.setState({
+            editingIndex: index,
+            editingCharacter: { ...this.state.characters[index] }
+        });
+    }
+
+    handleEditSubmit = character => {
+        const { characters, editingIndex } = this.state;
+        characters[editingIndex] = character;
+        this.setState({ characters, editingIndex: null, editingCharacter: { name: '', last_name: '', email: '' } });
     }
 
     handleSubmit = character => {
@@ -26,35 +44,47 @@ class App extends Component {
     }
 
     toggleView = () => {
-      this.setState({ view: this.state.view === 'table' ? 'cards' : 'table' });
-  }
+        this.setState({ view: this.state.view === 'table' ? 'cards' : 'table' });
+    }
 
     render() {
-        const { characters,view } = this.state;
-        
+        const { characters, view, editingIndex, editingCharacter } = this.state;
+
         return (
-          <div className="container">
-          <button onClick={this.toggleView}>
-              {view === 'table' ? 'Показать карточки' : 'Показать таблицу'}
-          </button>
-          {view === 'table' ? (
-              <Table 
-                  characterData={characters} 
-                  removeCharacter={this.removeCharacter} 
-              />
-          ) : (
-              <div className="card-container">
-                  {characters.map((character, index) => (
-                      <UserCard 
-                          key={index} 
-                          user={character} 
-                          removeCharacter={() => this.removeCharacter(index)} 
-                      />
-                  ))}
-              </div>
-          )}
-          <Form handleSubmit={this.handleSubmit} />
-      </div>
+            <ThemeProvider theme={theme}>
+                <div className="container">
+
+                    <button onClick={this.toggleView}>
+                        {view === 'table' ? 'Показать карточки' : 'Показать таблицу'}
+                    </button>
+
+                    <Form 
+                        handleSubmit={editingIndex !== null ? this.handleEditSubmit : this.handleSubmit} 
+                        character={editingCharacter} 
+                    />
+
+                    {view === 'table' ? (
+                        <TableComponent
+                            characterData={characters} 
+                            removeCharacter={this.removeCharacter} 
+                            changeCharacter={this.changeCharacter} 
+                        />
+                    ) : (
+                        <div className="card-container">
+                            {characters.map((character, index) => (
+                                <UserCard 
+                                    key={index} 
+                                    user={character} 
+                                    index={index}
+                                    removeCharacter={() => this.removeCharacter(index)}
+                                    changeCharacter={() => this.changeCharacter(index)} 
+                                />
+                            ))}
+                        </div>
+                    )}
+                    
+                </div>
+            </ThemeProvider>
         );
     }
 }
