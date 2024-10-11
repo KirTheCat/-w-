@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, {useState} from 'react';
+import {useNavigate} from 'react-router-dom';
+import {Button, Container, TextField} from "@mui/material";
 
 const Login = () => {
     const [username, setUsername] = useState('');
@@ -17,18 +18,43 @@ const Login = () => {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
+        <Container component="main" maxWidth="xs">
+            <form onSubmit={handleSubmit}>
             <div>
-                <label>Username:</label>
-                <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
+                <TextField
+                    fullWidth
+                    type="text"
+                    label="Username"
+                    margin="normal"
+                    variant="outlined"
+                    value={username}
+                    required
+                    onChange={(e) => setUsername(e.target.value)}
+                />
             </div>
             <div>
-                <label>Password:</label>
-                <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                <TextField
+                    fullWidth
+                    type="password"
+                    label="Password"
+                    margin="normal"
+                    value={password}
+                    required
+                    onChange={(e) => setPassword(e.target.value)}
+                />
             </div>
-            <button type="submit">Login</button>
+            <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+            >
+                Login
+            </Button>
+
         </form>
-    );
+</Container>
+)
+    ;
 };
 
 export default Login;
