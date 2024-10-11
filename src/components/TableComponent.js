@@ -6,12 +6,12 @@ import { styled} from '@mui/system';
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
     '&:nth-of-type(odd)': {
-      backgroundColor: theme.palette.action.hover,
+        backgroundColor: theme.palette.action.hover,
     },
-  }));
-  
-/*******************/ 
-const TableHeader = () => { 
+}));
+
+/*******************/
+const TableHeader = () => {
     return (
         <TableHead>
             <TableRow>
@@ -24,7 +24,7 @@ const TableHeader = () => {
     );
 }
 
-const TableBodyComponent = props => { 
+const TableBodyComponent = props => {
     const rows = props.characterData.map((row, index) => {
         return (
             <StyledTableRow key={index}>
@@ -48,11 +48,12 @@ const TableComponent = (props) => {
         <TableContainer component={Paper}>
             <Table>
                 <TableHeader />
-                <TableBodyComponent 
+                <TableBodyComponent
                     characterData={characterData}
                     removeCharacter={removeCharacter}
                     changeCharacter={changeCharacter}
                 />
+
             </Table>
         </TableContainer>
     );
