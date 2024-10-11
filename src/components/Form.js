@@ -1,71 +1,86 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
+import {Button, Container, TextField} from "@mui/material";
 
-class Form extends Component {
-    constructor(props) {
-        super(props);
-        
-        this.initialState = {
-            name: '',
-            last_name: '',
-            email: ''
-        };
+const Form = (props) => {
+    const initialState = {
+        name: '',
+        last_name: '',
+        email: ''
+    };
 
-        this.state = this.initialState;
-    }
+    const [formState, setFormState] = useState(initialState);
 
-    componentDidUpdate(prevProps) {
-        if (this.props.character !== prevProps.character) {
-            this.setState(this.props.character);
+    useEffect(() => {
+        if (props.character) {
+            setFormState(props.character);
         }
-    }
+    }, [props.character]);
 
-    handleChange = event => {
+    const handleChange = (event) => {
         const { name, value } = event.target;
-
-        this.setState({
+        setFormState({
+            ...formState,
             [name]: value
         });
-    }
+    };
 
-    onFormSubmit = event => {
+    const onFormSubmit = (event) => {
         event.preventDefault();
-        
-        this.props.handleSubmit(this.state);
-        this.setState(this.initialState);
-    }
+        props.handleSubmit(formState);
+        setFormState(initialState);
+    };
 
-    render() {
-        const { name, last_name, email } = this.state; 
+    const { name, last_name, email } = formState;
 
-        return (
-            <form onSubmit={this.onFormSubmit}>
-                <label for="name">Имя</label>
-                <input 
-                    type="text" 
-                    name="name" 
+    return (
+        <Container
+            component="main"
+            maxWidth="xs"
+            sx={{ width: '300px', padding: '1rem' }}
+        >
+            <form onSubmit={onFormSubmit}>
+
+                <TextField
+                    type="text"
+                    label="Имя"
+                    name="name"
                     id="name"
-                    value={name} 
-                    onChange={this.handleChange} />
-                <label for="last_name">Фамилия</label>
-                <input 
-                    type="text" 
-                    name="last_name" 
+                    value={name}
+                    fullWidth
+                    variant="outlined"
+                    onChange={handleChange}
+                />
+                <TextField
+                    type="text"
+                    label="Фамилия"
+                    name="last_name"
                     id="last_name"
-                    value={last_name} 
-                    onChange={this.handleChange} />
-                <label for="email">Email</label>
-                <input 
-                    type="email" 
-                    name="email" 
+                    value={last_name}
+                    fullWidth
+                    variant="outlined"
+                    onChange={handleChange}
+                />
+                <TextField
+                    type="email"
+                    name="email"
+                    label="Эл.почта"
                     id="email"
-                    value={email} 
-                    onChange={this.handleChange} />
-                <button type="submit">
+                    value={email}
+                    fullWidth
+                    variant="outlined"
+                    onChange={handleChange}
+                />
+                <Button
+                    type="submit"
+                    variant="contained"
+                    fullWidth
+                >
                     Подтвердить
-                </button>
+                </Button>
             </form>
-        );
-    }
-}
+        </Container>
+
+    );
+};
 
 export default Form;
