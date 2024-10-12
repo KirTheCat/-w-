@@ -1,5 +1,15 @@
 import React from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Paper,
+    Button,
+    ButtonGroup
+} from '@mui/material';
 import { styled} from '@mui/system';
 
 /*******style********/
@@ -32,8 +42,25 @@ const TableBodyComponent = props => {
                 <TableCell>{row.last_name}</TableCell>
                 <TableCell>{row.email}</TableCell>
                 <TableCell>
-                    <button onClick={() => props.removeCharacter(index)}>Удалить</button>
-                    <button onClick={() => props.changeCharacter(index)}>Изменить</button>
+                    <ButtonGroup size="small" aria-label="small primary button group">
+                        <Button
+                            variant="contained"
+                            color="deleteColor"
+                            onClick={() => props.removeCharacter(index)}
+                        >
+                            Удалить
+                        </Button>
+
+                        <Button
+                            variant="contained"
+                            color="editColor"
+                            onClick={() => props.changeCharacter(index)}
+
+                        >
+                            Изменить
+                        </Button>
+                    </ButtonGroup>
+
                 </TableCell>
             </StyledTableRow>
         );

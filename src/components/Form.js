@@ -73,6 +73,7 @@ const Form = (props) => {
                 <Button
                     type="submit"
                     variant="contained"
+                    color="customPurple"
                     fullWidth
                 >
                     Подтвердить
