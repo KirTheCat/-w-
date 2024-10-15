@@ -1,25 +1,36 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import Form from './Form';
+import TableComponent from './TableComponent';
+import {FormControlLabel, Switch} from "@mui/material";
+import CardContainer from './CardContainer';
+import { addUser, removeUser, updateUser } from "../redux/actions/UserActions";
 
 const Home = () => {
-  const characters = useSelector(state => state.users);
+  const characters = useSelector(state => state.userState.users);
   const dispatch = useDispatch();
+  const [view, setView] = useState('table');
+  const [editingIndex, setEditingIndex] = useState(null);
+  const [editingCharacter, setEditingCharacter] = useState({ name: '', last_name: '', email: '' });
 
-  const removeCharacter = index => {
-    dispatch({ type: 'REMOVE_USER', payload: index });
+  const handleRemoveCharacter = index => {
+    dispatch(removeUser(index));
   };
 
-  const changeCharacter = index => {
+  const handleEditCharacter = index => {
     const character = characters[index];
-    dispatch({ type: 'UPDATE_USER', payload: { index, user: character } });
+    setEditingIndex(index);
+    setEditingCharacter(character);
   };
 
   const handleEditSubmit = character => {
-    dispatch({ type: 'UPDATE_USER', payload: { index: editingIndex, user: character } });
+    dispatch(updateUser(editingIndex, character));
+    setEditingIndex(null);
+    setEditingCharacter({ name: '', last_name: '', email: '' });
   };
 
   const handleSubmit = character => {
-    dispatch({ type: 'ADD_USER', payload: character });
+    dispatch(addUser(character));
   };
 
   const toggleView = () => {
@@ -27,37 +38,37 @@ const Home = () => {
   };
 
   return (
-    <div className="container">
-      <Form
-        handleSubmit={editingIndex !== null ? handleEditSubmit : handleSubmit}
-        character={editingCharacter}
-      />
-      <FormControlLabel
-        control={
-          <Switch
-            checked={view === 'cards'}
-            onChange={toggleView}
-            name="viewSwitch"
-            color="primary"
-          />
-        }
-        label={view === 'table' ? 'Показать таблицу' : 'Показать карточки'}
-      />
-      {view === 'table' ? (
-        <TableComponent
-          characterData={characters}
-          removeCharacter={removeCharacter}
-          changeCharacter={changeCharacter}
+      <div className="container">
+        <Form
+            handleSubmit={editingIndex !== null ? handleEditSubmit : handleSubmit}
+            character={editingCharacter}
         />
-      ) : (
-        <CardContainer
-          characters={characters}
-          removeCharacter={removeCharacter}
-          changeCharacter={changeCharacter}
+        <FormControlLabel
+            control={
+              <Switch
+                  checked={view === 'cards'}
+                  onChange={toggleView}
+                  name="viewSwitch"
+                  color="primary"
+              />
+            }
+            label={view === 'table' ? 'Показать таблицу' : 'Показать карточки'}
         />
-      )}
-    </div>
+        {view === 'table' ? (
+            <TableComponent
+                characterData={characters}
+                removeCharacter={handleRemoveCharacter}
+                changeCharacter={handleEditCharacter}
+            />
+        ) : (
+            <CardContainer
+                characters={characters}
+                removeCharacter={handleRemoveCharacter}
+                changeCharacter={handleEditCharacter}
+            />
+        )}
+      </div>
   );
-}
+};
 
 export default Home;

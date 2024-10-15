@@ -1,60 +1,43 @@
-import React, {useState} from 'react';
-import {useNavigate} from 'react-router-dom';
-import {Alert, Button, Container, TextField} from "@mui/material";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import {useDispatch} from "react-redux";
+import { TextField, Button, Box } from '@mui/material';
+import { setAuthenticatedUser } from '../redux/actions/UserActions';
 
-const Login = () => {
+function Login() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
-    const [alert, setAlert] = useState(null);
+    const dispatch = useDispatch();
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
+    const handleLogin = () => {
         if (username === '1' && password === '1') {
             localStorage.setItem('auth', 'true');
+            dispatch(setAuthenticatedUser({ username, email: 'user@example.com' }));
             navigate('/');
-        } else {
-            setAlert(<Alert severity="info">Неверные данные для входа</Alert>);
         }
     };
 
     return (
-        <Container component="main" maxWidth="xs">
-            {alert}
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <TextField
-                        fullWidth
-                        type="text"
-                        label="Username"
-                        margin="normal"
-                        variant="outlined"
-                        value={username}
-                        required
-                        onChange={(e) => setUsername(e.target.value)}
-                    />
-                </div>
-                <div>
-                    <TextField
-                        fullWidth
-                        type="password"
-                        label="Password"
-                        margin="normal"
-                        value={password}
-                        required
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-                </div>
-                <Button
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                >
-                    Login
-                </Button>
-            </form>
-        </Container>
+        <Box display="flex" flexDirection="column" alignItems="center">
+            <TextField
+                label="Имя Пользователя"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                margin="normal"
+            />
+            <TextField
+                label="Пароль"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                margin="normal"
+            />
+            <Button variant="contained" color="customPurple" onClick={handleLogin}>
+                Авторизоваться
+            </Button>
+        </Box>
     );
-};
+}
 
 export default Login;

@@ -2,9 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { ThemeProvider } from '@mui/material/styles';
 import { Provider } from 'react-redux';
-import store from './store';
+import store from './redux/store/store';
 import theme from './mui/theme';
-import App from './App';
+import App from './components/App';
 import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -15,8 +15,7 @@ root.render(
         <App />
       </ThemeProvider>
     </Provider>
-  </React.StrictMode
-    </React.StrictMode>
+  </React.StrictMode>
 );
 
 

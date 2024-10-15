@@ -1,7 +1,7 @@
 import {BrowserRouter, Routes, Route } from 'react-router-dom';
-import ProtectedRoutes from './utils/ProtectedRoutes';
-import Home from "./components/Home";
-import Login from "./components/Login";
+import ProtectedRoutes from '../utils/ProtectedRoutes';
+import Home from "./Home";
+import Login from "./Login";
 import {useEffect} from "react";
 
 function App() {
@@ -16,7 +16,6 @@ function App() {
                 <Route element={<ProtectedRoutes/>}>
                     <Route element={<Home/>} path="/"/>
                 </Route>
-
             </Routes>
         </BrowserRouter>
     );
