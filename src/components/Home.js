@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Form from './Form';
 import TableComponent from './TableComponent';
-import {FormControlLabel, Switch} from "@mui/material";
+import { Container, FormControlLabel, Switch, Typography } from "@mui/material";
 import CardContainer from './CardContainer';
 import { addUser, removeUser, updateUser } from "../redux/actions/UserActions";
 
@@ -12,6 +12,7 @@ const Home = () => {
   const [view, setView] = useState('table');
   const [editingIndex, setEditingIndex] = useState(null);
   const [editingCharacter, setEditingCharacter] = useState({ name: '', last_name: '', email: '' });
+  const isAuthenticated = useSelector((state) => state.authState.isAuthenticated);
 
   const handleRemoveCharacter = index => {
     dispatch(removeUser(index));
@@ -38,36 +39,42 @@ const Home = () => {
   };
 
   return (
-      <div className="container">
-        <Form
-            handleSubmit={editingIndex !== null ? handleEditSubmit : handleSubmit}
-            character={editingCharacter}
-        />
-        <FormControlLabel
-            control={
-              <Switch
-                  checked={view === 'cards'}
-                  onChange={toggleView}
-                  name="viewSwitch"
-                  color="primary"
+      <Container>
+        {isAuthenticated ? (
+            <div className="container">
+              <Form
+                  handleSubmit={editingIndex !== null ? handleEditSubmit : handleSubmit}
+                  character={editingCharacter}
               />
-            }
-            label={view === 'table' ? 'Показать таблицу' : 'Показать карточки'}
-        />
-        {view === 'table' ? (
-            <TableComponent
-                characterData={characters}
-                removeCharacter={handleRemoveCharacter}
-                changeCharacter={handleEditCharacter}
-            />
+              <FormControlLabel
+                  control={
+                    <Switch
+                        checked={view === 'cards'}
+                        onChange={toggleView}
+                        name="viewSwitch"
+                        color="primary"
+                    />
+                  }
+                  label={view === 'table' ? 'Показать таблицу' : 'Показать карточки'}
+              />
+              {view === 'table' ? (
+                  <TableComponent
+                      characterData={characters}
+                      removeCharacter={handleRemoveCharacter}
+                      changeCharacter={handleEditCharacter}
+                  />
+              ) : (
+                  <CardContainer
+                      characters={characters}
+                      removeCharacter={handleRemoveCharacter}
+                      changeCharacter={handleEditCharacter}
+                  />
+              )}
+            </div>
         ) : (
-            <CardContainer
-                characters={characters}
-                removeCharacter={handleRemoveCharacter}
-                changeCharacter={handleEditCharacter}
-            />
+            <Typography variant="h6">Для просмотра содержимого требуется авторизация</Typography>
         )}
-      </div>
+      </Container>
   );
 };
 

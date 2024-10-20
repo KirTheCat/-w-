@@ -1,21 +1,35 @@
-import {BrowserRouter, Routes, Route } from 'react-router-dom';
-import ProtectedRoutes from '../utils/ProtectedRoutes';
-import Home from "./Home";
-import Login from "./Login";
-import {useEffect} from "react";
+import React, {useEffect } from 'react';
+import {BrowserRouter, Routes, Route} from 'react-router-dom';
+import Home from '../components/Home';
+import Secondary from '../components/Secondary';
+import Login from '../components/Login';
+import NavBar from '../components/NavBar';
+import { useDispatch, useSelector } from 'react-redux';
+import { setAuthenticatedUser, logoutUser } from '../redux/actions/AuthActions';
 
 function App() {
+    const dispatch = useDispatch();
+    const isAuthenticated = useSelector((state) => state.authState.isAuthenticated);
+
     useEffect(() => {
-            localStorage.setItem('auth', 'false');
-    }, []);
+        const authStatus = localStorage.getItem('auth') === 'true';
+        if (authStatus) {
+            dispatch(setAuthenticatedUser({ username: 'admin', email: 'user@example.com' }));
+        }
+    }, [dispatch]);
+
+    const handleLogout = () => {
+        localStorage.setItem('auth', 'false');
+        dispatch(logoutUser());
+    };
 
     return (
         <BrowserRouter>
+            <NavBar isAuthenticated={isAuthenticated} handleLogout={handleLogout} />
             <Routes>
-                <Route element={<Login/>} path='/login'/>
-                <Route element={<ProtectedRoutes/>}>
-                    <Route element={<Home/>} path="/"/>
-                </Route>
+                <Route path='/login' element={<Login />} />
+                <Route path="/" element= {<Home/> }/>
+                <Route path="/secondary" element={<Secondary/>} />
             </Routes>
         </BrowserRouter>
     );

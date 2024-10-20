@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {useDispatch} from "react-redux";
-import { TextField, Button, Box } from '@mui/material';
-import { setAuthenticatedUser } from '../redux/actions/UserActions';
+import { useDispatch } from 'react-redux';
+import { Box, TextField, Button } from '@mui/material';
+import { setAuthenticatedUser } from '../redux/actions/AuthActions';
 
-function Login() {
+const Login = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();

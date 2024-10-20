@@ -2,3 +2,4 @@ export const ADD_USER = 'ADD_USER';
 export const REMOVE_USER = 'REMOVE_USER';
 export const UPDATE_USER = 'UPDATE_USER';
 export const SET_AUTHENTICATED_USER = 'SET_AUTHENTICATED_USER';
+export const LOGOUT_USER = 'LOGOUT_USER'
