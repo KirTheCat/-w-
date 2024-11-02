@@ -47,6 +47,7 @@ const Form = (props) => {
                     id="name"
                     value={name}
                     fullWidth
+                    required
                     variant="outlined"
                     onChange={handleChange}
                 />
@@ -57,6 +58,7 @@ const Form = (props) => {
                     id="last_name"
                     value={last_name}
                     fullWidth
+                    required
                     variant="outlined"
                     onChange={handleChange}
                 />
@@ -67,6 +69,7 @@ const Form = (props) => {
                     id="email"
                     value={email}
                     fullWidth
+                    required
                     variant="outlined"
                     onChange={handleChange}
                 />

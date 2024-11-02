@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 import { styled} from '@mui/system';
 
-/*******style********/
+/******* style ********/
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
     '&:nth-of-type(odd)': {
