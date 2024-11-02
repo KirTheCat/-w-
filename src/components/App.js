@@ -7,7 +7,7 @@ import NavBar from '../components/NavBar';
 import { useDispatch, useSelector } from 'react-redux';
 import { setAuthenticatedUser, logoutUser } from '../redux/actions/AuthActions';
 
-function App() {
+function App({ handleThemeChange, themeName }) {
     const dispatch = useDispatch();
     const isAuthenticated = useSelector((state) => state.authState.isAuthenticated);
 
@@ -25,7 +25,12 @@ function App() {
 
     return (
         <BrowserRouter>
-            <NavBar isAuthenticated={isAuthenticated} handleLogout={handleLogout} />
+            <NavBar
+                isAuthenticated={isAuthenticated}
+                handleLogout={handleLogout}
+                handleThemeChange={handleThemeChange}
+                themeName={themeName}
+            />
             <Routes>
                 <Route path='/login' element={<Login />} />
                 <Route path="/" element= {<Home/> }/>

@@ -17,7 +17,12 @@ const Login = () => {
             setAlert(<Alert severity="success">Успешная авторизация</Alert>);
             dispatch(setAuthenticatedUser({ username, email: 'user@example.com' }));
             navigate('/');
-        } else setAlert(<Alert severity="error">Неверный пароль</Alert>);
+        } else {
+            setAlert(<Alert severity="error">Неверный пароль</Alert>);
+            setTimeout(() => {
+                setAlert(null);
+            }, 500);
+        }
     };
 
     return (
@@ -28,6 +33,7 @@ const Login = () => {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 margin="normal"
+                required
             />
             <TextField
                 label="Пароль"
@@ -35,6 +41,7 @@ const Login = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 margin="normal"
+                required
             />
             <Button variant="contained" color="customPurple" onClick={handleLogin}>
                 Авторизоваться

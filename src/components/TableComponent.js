@@ -8,9 +8,10 @@ import {
     TableRow,
     Paper,
     Button,
-    ButtonGroup
+    ButtonGroup,
+    TextField
 } from '@mui/material';
-import { styled} from '@mui/system';
+import { styled } from '@mui/system';
 
 /******* style ********/
 
@@ -18,29 +19,75 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     '&:nth-of-type(odd)': {
         backgroundColor: theme.palette.action.hover,
     },
+    '&:nth-of-type(even)': {
+        backgroundColor: theme.palette.background.default,
+    },
 }));
+
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+    backgroundColor: theme.palette.background.alternate,
+    color: theme.palette.text.primary,
+}));
+
+// const StyledTableHead = styled(TableHead)(({ theme }) => ({
+//     backgroundColor: theme.palette.background.paper,
+//     color: theme.palette.text.primary,
+// }));
 
 /*******************/
 const TableHeader = () => {
     return (
         <TableHead>
-            <TableRow>
-                <TableCell>Имя</TableCell>
-                <TableCell>Фамилия</TableCell>
-                <TableCell>Email</TableCell>
-                <TableCell>Действия</TableCell>
-            </TableRow>
+            <StyledTableRow>
+                <StyledTableCell>Имя</StyledTableCell>
+                <StyledTableCell>Фамилия</StyledTableCell>
+                <StyledTableCell>Email</StyledTableCell>
+                <StyledTableCell>Действия</StyledTableCell>
+            </StyledTableRow>
         </TableHead>
     );
 }
 
-const TableBodyComponent = props => {
+const TableBodyComponent = (props) => {
     const rows = props.characterData.map((row, index) => {
         return (
             <StyledTableRow key={index}>
-                <TableCell>{row.name}</TableCell>
-                <TableCell>{row.last_name}</TableCell>
-                <TableCell>{row.email}</TableCell>
+                <TableCell onClick={() => props.handleFieldClick(index, 'name')}>
+                    {props.editableField.index === index && props.editableField.field === 'name' ? (
+                        <TextField
+                            value={row.name}
+                            onChange={(e) => props.handleFieldChange(e, index, 'name')}
+                            onBlur={() => props.handleFieldClick(null, '')}
+                            autoFocus
+                        />
+                    ) : (
+                        row.name
+                    )}
+                </TableCell>
+                <TableCell onClick={() => props.handleFieldClick(index, 'last_name')}>
+                    {props.editableField.index === index && props.editableField.field === 'last_name' ? (
+                        <TextField
+                            value={row.last_name}
+                            onChange={(e) => props.handleFieldChange(e, index, 'last_name')}
+                            onBlur={() => props.handleFieldClick(null, '')}
+                            autoFocus
+                        />
+                    ) : (
+                        row.last_name
+                    )}
+                </TableCell>
+                <TableCell onClick={() => props.handleFieldClick(index, 'email')}>
+                    {props.editableField.index === index && props.editableField.field === 'email' ? (
+                        <TextField
+                            value={row.email}
+                            onChange={(e) => props.handleFieldChange(e, index, 'email')}
+                            onBlur={() => props.handleFieldClick(null, '')}
+                            autoFocus
+                        />
+                    ) : (
+                        row.email
+                    )}
+                </TableCell>
                 <TableCell>
                     <ButtonGroup size="small" aria-label="small primary button group">
                         <Button
@@ -55,35 +102,27 @@ const TableBodyComponent = props => {
                             variant="contained"
                             color="editColor"
                             onClick={() => props.changeCharacter(index)}
-
                         >
                             Изменить
                         </Button>
                     </ButtonGroup>
-
                 </TableCell>
             </StyledTableRow>
         );
     });
 
     return <TableBody>{rows}</TableBody>;
-}
+};
 
 const TableComponent = (props) => {
-    const { characterData, removeCharacter, changeCharacter } = props;
     return (
         <TableContainer component={Paper}>
             <Table>
                 <TableHeader />
-                <TableBodyComponent
-                    characterData={characterData}
-                    removeCharacter={removeCharacter}
-                    changeCharacter={changeCharacter}
-                />
-
+                <TableBodyComponent {...props} />
             </Table>
         </TableContainer>
     );
-}
+};
 
 export default TableComponent;

@@ -13,6 +13,7 @@ const Home = () => {
   const [editingIndex, setEditingIndex] = useState(null);
   const [editingCharacter, setEditingCharacter] = useState({ name: '', last_name: '', email: '' });
   const isAuthenticated = useSelector((state) => state.authState.isAuthenticated);
+  const [editableField, setEditableField] = useState({ index: null, field: '' });
 
   const handleRemoveCharacter = index => {
     dispatch(removeUser(index));
@@ -36,6 +37,14 @@ const Home = () => {
 
   const toggleView = () => {
     setView(view === 'table' ? 'cards' : 'table');
+  };
+
+const handleFieldClick =(index,field) => {
+  setEditableField({index, field});
+}
+  const handleFieldChange = (e, index, field) => {
+    const newCharacter = { ...characters[index], [field]: e.target.value };
+    dispatch(updateUser(index, newCharacter));
   };
 
   return (
@@ -62,6 +71,9 @@ const Home = () => {
                       characterData={characters}
                       removeCharacter={handleRemoveCharacter}
                       changeCharacter={handleEditCharacter}
+                      handleFieldClick={handleFieldClick}
+                      handleFieldChange={handleFieldChange}
+                      editableField={editableField}
                   />
               ) : (
                   <CardContainer
