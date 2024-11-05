@@ -4,7 +4,8 @@ const lightTheme = createTheme({
     palette: {
         mode: 'light',
         primary: {
-            main: '#1976d2',
+            main: '#0000CC',
+            select: '#3300FF',
         },
         secondary: {
             main: '#ff4081',
@@ -35,7 +36,8 @@ const darkTheme = createTheme({
     palette: {
         mode: 'dark',
         primary: {
-            main: '#bb86fc',
+            main: '#CC66FF',
+            select: '#CC99FF',
         },
         secondary: {
             main: '#03dac6',
@@ -63,7 +65,8 @@ const greenTheme = createTheme({
     palette: {
         mode: 'light',
         primary: {
-            main: '#66bb6a',
+            main: '#339900',
+            select: '#66CC66',
         },
         secondary: {
             main: '#a5d6a7',
@@ -91,7 +94,8 @@ const purpleTheme = createTheme({
     palette: {
         mode: 'light',
         primary: {
-            main: '#ab47bc',
+            main: '#CC66FF',
+            select: '#CC99FF',
         },
         secondary: {
             main: '#ce93d8',
