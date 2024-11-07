@@ -5,7 +5,7 @@ import Secondary from '../components/Secondary';
 import Login from '../components/Login';
 import NavBar from '../components/NavBar';
 import { useDispatch, useSelector } from 'react-redux';
-import { setAuthenticatedUser, logoutUser } from '../redux/actions/AuthActions';
+import { setAuthenticatedUser, logoutUser } from '../redux/slicers/authSlice';
 
 function App({ handleThemeChange, themeName }) {
     const dispatch = useDispatch();

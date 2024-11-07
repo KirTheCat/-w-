@@ -4,7 +4,7 @@ import Form from './Form';
 import TableComponent from './TableComponent';
 import { Container, FormControlLabel, Switch, Typography } from "@mui/material";
 import CardContainer from './CardContainer';
-import { addUser, removeUser, updateUser } from "../redux/actions/UserActions";
+import { addUser, removeUser, updateUser } from "../redux/slicers/userSlice";
 
 const Home = () => {
   const characters = useSelector(state => state.userState.users);

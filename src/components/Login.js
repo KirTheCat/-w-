@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import {Box, TextField, Button, Alert} from '@mui/material';
-import { setAuthenticatedUser } from '../redux/actions/AuthActions';
+import { setAuthenticatedUser } from '../redux/slicers/authSlice';
 
 const Login = () => {
     const [username, setUsername] = useState('');

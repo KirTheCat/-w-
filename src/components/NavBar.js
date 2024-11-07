@@ -9,7 +9,7 @@ import {
     FormControl,
     Select,
     MenuItem,
-    useTheme, InputLabel
+    useTheme,
 } from '@mui/material';
 import {Link, useLocation, useNavigate} from 'react-router-dom';
 import {deepOrange} from '@mui/material/colors';

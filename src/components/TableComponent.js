@@ -29,12 +29,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     color: theme.palette.text.primary,
 }));
 
-// const StyledTableHead = styled(TableHead)(({ theme }) => ({
-//     backgroundColor: theme.palette.background.paper,
-//     color: theme.palette.text.primary,
-// }));
-
-/*******************/
+/*****************/
 const TableHeader = () => {
     return (
         <TableHead>
