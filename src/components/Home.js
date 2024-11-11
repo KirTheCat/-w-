@@ -1,8 +1,8 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { Container, FormControlLabel, Switch, Typography } from "@mui/material";
 import Form from './Form';
 import TableComponent from './TableComponent';
-import { Container, FormControlLabel, Switch, Typography } from "@mui/material";
 import CardContainer from './CardContainer';
 import { addUser, removeUser, updateUser } from "../redux/slicers/userSlice";
 
@@ -12,8 +12,9 @@ const Home = () => {
   const [view, setView] = useState('table');
   const [editingIndex, setEditingIndex] = useState(null);
   const [editingCharacter, setEditingCharacter] = useState({ name: '', last_name: '', email: '' });
-  const isAuthenticated = useSelector((state) => state.authState.isAuthenticated);
+  const isAuthenticated = useSelector(state => state.authState.isAuthenticated);
   const [editableField, setEditableField] = useState({ index: null, field: '' });
+  const [isEditable, setIsEditable] = useState(true); // Добавлено: переключатель режима редактирования
 
   const handleRemoveCharacter = index => {
     dispatch(removeUser(index));
@@ -39,12 +40,17 @@ const Home = () => {
     setView(view === 'table' ? 'cards' : 'table');
   };
 
-const handleFieldClick =(index,field) => {
-  setEditableField({index, field});
-}
+  const handleFieldClick = (index, field) => {
+    setEditableField({ index, field });
+  };
+
   const handleFieldChange = (e, index, field) => {
     const newCharacter = { ...characters[index], [field]: e.target.value };
     dispatch(updateUser(index, newCharacter));
+  };
+
+  const toggleEditable = () => {
+    setIsEditable(!isEditable);
   };
 
   return (
@@ -66,12 +72,23 @@ const handleFieldClick =(index,field) => {
                   }
                   label={view === 'table' ? 'Показать таблицу' : 'Показать карточки'}
               />
+              <FormControlLabel
+                  control={
+                    <Switch
+                        checked={isEditable}
+                        onChange={toggleEditable}
+                        name="editableSwitch"
+                        color="primary"
+                    />
+                  }
+                  label={isEditable ? 'Редактирование включено' : 'Редактирование отключено'}
+              />
               {view === 'table' ? (
                   <TableComponent
                       characterData={characters}
                       removeCharacter={handleRemoveCharacter}
                       changeCharacter={handleEditCharacter}
-                      handleFieldClick={handleFieldClick}
+                      handleFieldClick={isEditable ? handleFieldClick : () => {}}
                       handleFieldChange={handleFieldChange}
                       editableField={editableField}
                   />

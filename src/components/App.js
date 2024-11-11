@@ -2,7 +2,7 @@ import React, {useEffect } from 'react';
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
 import Home from '../components/Home';
 import Secondary from '../components/Secondary';
-import Login from '../components/Login';
+import LoginComponent from './LoginComponent';
 import NavBar from '../components/NavBar';
 import { useDispatch, useSelector } from 'react-redux';
 import { setAuthenticatedUser, logoutUser } from '../redux/slicers/authSlice';
@@ -32,7 +32,7 @@ function App({ handleThemeChange, themeName }) {
                 themeName={themeName}
             />
             <Routes>
-                <Route path='/login' element={<Login />} />
+                <Route path='/login' element={<LoginComponent />} />
                 <Route path="/" element= {<Home/> }/>
                 <Route path="/secondary" element={<Secondary/>} />
             </Routes>
