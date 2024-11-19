@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Container, FormControlLabel, Switch, Typography } from "@mui/material";
+import {Container, FormControlLabel, Switch, Tooltip, Typography} from "@mui/material";
 import Form from './Form';
 import TableComponent from './TableComponent';
 import CardContainer from './CardContainer';
@@ -14,7 +14,7 @@ const Home = () => {
   const [editingCharacter, setEditingCharacter] = useState({ name: '', last_name: '', email: '' });
   const isAuthenticated = useSelector(state => state.authState.isAuthenticated);
   const [editableField, setEditableField] = useState({ index: null, field: '' });
-  const [isEditable, setIsEditable] = useState(true); // Добавлено: переключатель режима редактирования
+  const [isEditable, setIsEditable] = useState(true);
 
   const handleRemoveCharacter = index => {
     dispatch(removeUser(index));
@@ -27,7 +27,7 @@ const Home = () => {
   };
 
   const handleEditSubmit = character => {
-    dispatch(updateUser(editingIndex, character));
+    dispatch(updateUser({ index: editingIndex, user: character }));
     setEditingIndex(null);
     setEditingCharacter({ name: '', last_name: '', email: '' });
   };
@@ -36,19 +36,17 @@ const Home = () => {
     dispatch(addUser(character));
   };
 
-  const toggleView = () => {
-    setView(view === 'table' ? 'cards' : 'table');
-  };
-
   const handleFieldClick = (index, field) => {
     setEditableField({ index, field });
   };
 
   const handleFieldChange = (e, index, field) => {
-    const newCharacter = { ...characters[index], [field]: e.target.value };
-    dispatch(updateUser(index, newCharacter));
+    dispatch(updateUser({ index, user: {...characters[index],[field]: e.target.value}}));
   };
 
+  const toggleView = () => {
+    setView(view === 'table' ? 'cards' : 'table');
+  };
   const toggleEditable = () => {
     setIsEditable(!isEditable);
   };
@@ -61,6 +59,7 @@ const Home = () => {
                   handleSubmit={editingIndex !== null ? handleEditSubmit : handleSubmit}
                   character={editingCharacter}
               />
+              <Tooltip title="Просматривайте таблицу в виде карточек" placement="top-start">
               <FormControlLabel
                   control={
                     <Switch
@@ -71,7 +70,11 @@ const Home = () => {
                     />
                   }
                   label={view === 'table' ? 'Показать таблицу' : 'Показать карточки'}
+                  style={{ userSelect: 'none'}}
               />
+              </Tooltip>
+
+              <Tooltip title="Позволяет редактировать поля таблицы напрямую" placement="bottom-start">
               <FormControlLabel
                   control={
                     <Switch
@@ -79,15 +82,19 @@ const Home = () => {
                         onChange={toggleEditable}
                         name="editableSwitch"
                         color="primary"
+                        disabled={view === 'cards'}
                     />
                   }
                   label={isEditable ? 'Редактирование включено' : 'Редактирование отключено'}
+                  style={{ userSelect: 'none', display: view === 'cards' ? 'none' : 'block' }}
               />
+            </Tooltip>
+
               {view === 'table' ? (
                   <TableComponent
                       characterData={characters}
                       removeCharacter={handleRemoveCharacter}
-                      changeCharacter={handleEditCharacter}
+                      // changeCharacter={handleEditCharacter}
                       handleFieldClick={isEditable ? handleFieldClick : () => {}}
                       handleFieldChange={handleFieldChange}
                       editableField={editableField}

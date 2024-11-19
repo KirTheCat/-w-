@@ -1,8 +1,10 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { setAuthenticatedUser } from '../redux/slicers/authSlice';
-import { Alert } from '@mui/material';
+import {useState} from 'react';
+import {useNavigate} from 'react-router-dom';
+import {useDispatch} from 'react-redux';
+import {setAuthenticatedUser} from '../redux/slicers/authSlice';
+import {Alert} from '@mui/material';
+
+import axios from 'axios';
 
 const useLogin = () => {
     const [username, setUsername] = useState('');
@@ -13,7 +15,7 @@ const useLogin = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const handleLogin = () => {
+    const handleLogin = async() => {
         let hasError = false;
         if (username.trim() === '') {
             setUsernameError(true);
@@ -37,23 +39,23 @@ const useLogin = () => {
             return;
         }
 
-        if (username === '1' && password === '1') {
-            localStorage.setItem('auth', 'true');
-            dispatch(setAuthenticatedUser({ username, email: 'user@example.com' }));
+        try {
+            const response = await axios.post('http://localhost:8080/users/sign_in', {username, password});
+            const {token, user} = response.data;
+            localStorage.setItem('token', token);
+            dispatch(setAuthenticatedUser(user));
             setAlert(<Alert severity="success">Успешная авторизация</Alert>);
             setTimeout(() => {
                 setAlert(null);
                 navigate('/');
-            },100)
-
-        } else {
+            }, 100);
+        } catch (error) {
             setAlert(<Alert severity="error">Неверный логин или пароль</Alert>);
             setTimeout(() => {
                 setAlert(null);
             }, 2000);
         }
     };
-
     return {
         username,
         setUsername,

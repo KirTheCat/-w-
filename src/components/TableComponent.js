@@ -41,7 +41,7 @@ const TableBodyComponent = ({
                                 handleFieldClick,
                                 handleFieldChange,
                                 removeCharacter,
-                                changeCharacter
+                                // changeCharacter
                             }) => {
     return (<TableBody>
             {characterData.map((row, index) => (<StyledTableRow key={index}>
@@ -78,13 +78,13 @@ const TableBodyComponent = ({
                             >
                                 Удалить
                             </Button>
-                            <Button
-                                variant="contained"
-                                color="editColor"
-                                onClick={() => changeCharacter(index)}
-                            >
-                                Изменить
-                            </Button>
+                            {/*<Button*/}
+                            {/*    variant="contained"*/}
+                            {/*    color="editColor"*/}
+                            {/*    onClick={() => changeCharacter(index)}*/}
+                            {/*>*/}
+                            {/*    Изменить*/}
+                            {/*</Button>*/}
                         </ButtonGroup>
                     </TableCell>
                 </StyledTableRow>))}
