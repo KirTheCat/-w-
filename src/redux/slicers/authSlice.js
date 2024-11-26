@@ -1,8 +1,38 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import axios from 'axios';
+
+// Асинхронные действия для работы с аутентификацией
+export const signUpUser = createAsyncThunk('auth/signUpUser', async (user, { rejectWithValue }) => {
+    try {
+        const response = await axios.post('http://192.168.0.157:8081/users/sign_up', user);
+        console.log("signUpUser response data:", response.data);
+        return response.data;
+    } catch (error) {
+        if (!error.response) {
+            throw error;
+        }
+        return rejectWithValue(error.response.data);
+    }
+});
+
+export const signInUser = createAsyncThunk('auth/signInUser', async (credentials, { rejectWithValue }) => {
+    try {
+        const response = await axios.post('http://192.168.0.157:8081/users/sign_in', credentials);
+        console.log("signInUser response data:", response.data);
+        return response.data;
+    } catch (error) {
+        if (!error.response) {
+            throw error;
+        }
+        return rejectWithValue(error.response.data);
+    }
+});
 
 const initialState = {
     isAuthenticated: false,
-    user: null
+    user: null,
+    loading: false,
+    error: null
 };
 
 const authSlice = createSlice({
@@ -12,11 +42,52 @@ const authSlice = createSlice({
         setAuthenticatedUser: (state, action) => {
             state.isAuthenticated = true;
             state.user = action.payload;
+            localStorage.setItem('auth', 'true');
+            localStorage.setItem('user', JSON.stringify(action.payload));
+            console.log("setAuthenticatedUser:", state);
         },
         logoutUser: (state) => {
             state.isAuthenticated = false;
             state.user = null;
+            localStorage.removeItem('auth');
+            localStorage.removeItem('user');
+            console.log("logoutUser:", state);
         }
+    },
+    extraReducers: (builder) => {
+        builder
+            .addCase(signUpUser.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(signUpUser.fulfilled, (state, action) => {
+                state.loading = false;
+                state.isAuthenticated = true;
+                state.user = action.payload;
+                localStorage.setItem('auth', 'true');
+                localStorage.setItem('user', JSON.stringify(action.payload));
+                console.log("signUpUser fulfilled: state:", state);
+            })
+            .addCase(signUpUser.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
+                console.log("signUpUser rejected: error:", action.payload);
+            })
+            .addCase(signInUser.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(signInUser.fulfilled, (state, action) => {
+                state.loading = false;
+                state.isAuthenticated = true;
+                state.user = action.payload;
+                localStorage.setItem('auth', 'true');
+                localStorage.setItem('user', JSON.stringify(action.payload));
+                console.log("signInUser fulfilled: state:", state);
+            })
+            .addCase(signInUser.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
+                console.log("signInUser rejected: error:", action.payload);
+            });
     }
 });
 
