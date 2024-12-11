@@ -55,10 +55,10 @@ const useAuth = () => {
             if (isSignUp) {
                 const signUpResult = await dispatch(signUpUser(data));
                 const signUpUnwrapped = unwrapResult(signUpResult);
-                console.log("signUpUser result:", signUpUnwrapped);
+                // console.log("signUpUser result:", signUpUnwrapped);
                 const signInResult = await dispatch(signInUser({ username, password }));
                 const signInUnwrapped = unwrapResult(signInResult);
-                console.log("signInUser result:", signInUnwrapped);
+                // console.log("signInUser result:", signInUnwrapped);
                 setAlert(<Alert severity="success">Успешная регистрация и авторизация</Alert>);
                 setTimeout(() => {
                     setAlert(null);
@@ -68,7 +68,7 @@ const useAuth = () => {
             } else {
                 const signInResult = await dispatch(signInUser(data));
                 const signInUnwrapped = unwrapResult(signInResult);
-                console.log("signInUser result:", signInUnwrapped);
+                // console.log("signInUser result:", signInUnwrapped);
                 setAlert(<Alert severity="success">Успешная авторизация</Alert>);
                 setTimeout(() => {
                     setAlert(null);

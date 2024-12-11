@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
-import Secondary from './pages/Secondary';
+import MediaList from './pages/MediaList';
 import AuthComponent from './AuthComponent';
 import NavBar from './NavBar/NavBar';
 import { useDispatch, useSelector } from 'react-redux';
 import { setAuthenticatedUser, logoutUser } from '../redux/slicers/authSlice';
+import MediaInfo from "./pages/MediaInfo";
 
 function App({ handleThemeChange, themeName }) {
     const dispatch = useDispatch();
@@ -43,7 +44,8 @@ function App({ handleThemeChange, themeName }) {
             <Routes>
                 <Route path='/login' element={<AuthComponent />} />
                 <Route path="/" element={<Home />} />
-                <Route path="/secondary" element={<Secondary />} />
+                <Route path="/media" element={<MediaList />} />
+                <Route path="/media/:id" element={<MediaInfo/>} />
             </Routes>
         </BrowserRouter>
     );

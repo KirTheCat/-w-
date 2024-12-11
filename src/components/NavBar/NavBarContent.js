@@ -40,7 +40,7 @@ const NavBarContent = ({ isAuthenticated, handleLoginClick, handleLogout, handle
 
                 <ButtonGroup variant="outlined">
                     <Button color="inherit" component={Link} to="/">Главная</Button>
-                    <Button color="inherit" component={Link} to="/secondary">Второстепенная</Button>
+                    <Button color="inherit" component={Link} to="/media">Медиа</Button>
                 </ButtonGroup>
 
                 <FormControl sx={{ marginLeft: 'auto', marginRight: 2 }}>

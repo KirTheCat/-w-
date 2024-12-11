@@ -7,7 +7,7 @@ import App from './components/App';
 import reportWebVitals from './reportWebVitals';
 import { lightTheme, darkTheme, greenTheme, purpleTheme } from "./mui/theme";
 import {CssBaseline} from "@mui/material";
-import './config/axiosInterceptor'
+// import './config/axiosInterceptor'
 
 const themeMap = {
     light: lightTheme,
