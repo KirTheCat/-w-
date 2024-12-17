@@ -1,17 +1,13 @@
 import React from 'react';
 import { Box, TextField, Button, FormControlLabel, Switch } from '@mui/material';
-import useAuth from "../hooks/useAuth";
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
+import useAuth from '../hooks/useAuth';
 
 const AuthComponent = () => {
     const {
         isSignUp,
         setIsSignUp,
-        username,
-        setUsername,
-        email,
-        setEmail,
-        password,
-        setPassword,
         alert,
         handleAuth,
         usernameError,
@@ -21,57 +17,66 @@ const AuthComponent = () => {
 
     const handleToggle = () => {
         setIsSignUp(!isSignUp);
-        setUsername('');
-        setEmail('');
-        setPassword('');
     };
+
+    const validationSchema = Yup.object().shape({
+        username: Yup.string().required('Имя пользователя не может быть пустым'),
+        email: isSignUp
+            ? Yup.string().email('Неверный email').required('Email не может быть пустым')
+            : Yup.string().nullable(),
+        password: Yup.string().required('Пароль не может быть пустым'),
+    });
 
     return (
         <Box display="flex" flexDirection="column" alignItems="center">
             {alert}
             <FormControlLabel
                 control={<Switch checked={isSignUp} onChange={handleToggle} />}
-                label={isSignUp ? "Зарегистрироваться" : "Авторизоваться"}
+                label={isSignUp ? 'Зарегистрироваться' : 'Авторизоваться'}
             />
-            <form onSubmit={handleAuth}>
-                <TextField
-                    label="Имя Пользователя"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    margin="normal"
-                    required
-                    error={usernameError}
-                    helperText={usernameError ? "Имя пользователя не может быть пустым" : ""}
-                    style={{ width: '300px' }}
-                />
-                {isSignUp && (
-                    <TextField
-                        label="Email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        margin="normal"
-                        required
-                        error={emailError}
-                        helperText={emailError ? "Email не может быть пустым" : ""}
-                        style={{ width: '300px' }}
-                    />
+            <Formik
+                initialValues={{ username: '', email: '', password: '' }}
+                validationSchema={validationSchema}
+                onSubmit={handleAuth}
+            >
+                {({ errors, touched }) => (
+                    <Form>
+                        <Field
+                            as={TextField}
+                            label="Имя Пользователя"
+                            name="username"
+                            margin="normal"
+                            fullWidth
+                            error={touched.username && !!errors.username}
+                            helperText={touched.username && errors.username}
+                        />
+                        {isSignUp && (
+                            <Field
+                                as={TextField}
+                                label="Email"
+                                name="email"
+                                margin="normal"
+                                fullWidth
+                                error={touched.email && !!errors.email}
+                                helperText={touched.email && errors.email}
+                            />
+                        )}
+                        <Field
+                            as={TextField}
+                            label="Пароль"
+                            name="password"
+                            type="password"
+                            margin="normal"
+                            fullWidth
+                            error={touched.password && !!errors.password}
+                            helperText={touched.password && errors.password}
+                        />
+                        <Button type="submit" variant="contained" color="customPurple">
+                            {isSignUp ? 'Зарегистрироваться' : 'Авторизоваться'}
+                        </Button>
+                    </Form>
                 )}
-                <TextField
-                    label="Пароль"
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    margin="normal"
-                    required
-                    error={passwordError}
-                    helperText={passwordError ? "Пароль не может быть пустым" : ""}
-                    style={{ width: '300px' }}
-                    autoComplete="current-password"
-                />
-                <Button type="submit" variant="contained" color="customPurple">
-                    {isSignUp ? "Зарегистрироваться" : "Авторизоваться"}
-                </Button>
-            </form>
+            </Formik>
         </Box>
     );
 };

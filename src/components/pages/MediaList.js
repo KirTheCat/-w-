@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Box, Typography, List, ListItem, Card, CardContent, CircularProgress } from '@mui/material';
 import AddMediaButton from '../AddMedia';
+import {API_BASE_URL} from "../../config/ApiConfig";
 
 const MediaList = () => {
     const [media, setMedia] = useState([]);
@@ -10,7 +11,7 @@ const MediaList = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        axios.get('http://localhost:8081/media')
+        axios.get(`${API_BASE_URL}/media`)
             .then(response => {
                 setMedia(response.data);
             })

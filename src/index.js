@@ -4,10 +4,8 @@ import { ThemeProvider } from '@mui/material/styles';
 import { Provider } from 'react-redux';
 import store from './redux/store/store';
 import App from './components/App';
-import reportWebVitals from './reportWebVitals';
 import { lightTheme, darkTheme, greenTheme, purpleTheme } from "./mui/theme";
 import {CssBaseline} from "@mui/material";
-// import './config/axiosInterceptor'
 
 const themeMap = {
     light: lightTheme,
@@ -38,5 +36,3 @@ root.render(
         <Root />
     </React.StrictMode>
 );
-
-reportWebVitals();

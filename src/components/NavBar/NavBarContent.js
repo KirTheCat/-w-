@@ -16,10 +16,10 @@ import {
 import { Link } from 'react-router-dom';
 import { deepOrange } from '@mui/material/colors';
 
-const NavBarContent = ({ isAuthenticated, handleLoginClick, handleLogout, handleThemeChange, themeName, user = { username: 'User', email: '' } }) => {
+const NavBarContent = ({ isAuthenticated, handleLoginClick, handleLogout, handleThemeChange, themeName, user = { username: 'User', email: '' }, userRole }) => {
     const theme = useTheme();
     const [anchorEl, setAnchorEl] = useState(null);
-    const firstLetter = user && user.username ? user.username.charAt(0).toUpperCase() : 'U';
+    const firstLetter = user?.username?.charAt(0)?.toUpperCase() || 'U';
 
     const handleMenuOpen = (event) => {
         setAnchorEl(event.currentTarget);
@@ -41,6 +41,9 @@ const NavBarContent = ({ isAuthenticated, handleLoginClick, handleLogout, handle
                 <ButtonGroup variant="outlined">
                     <Button color="inherit" component={Link} to="/">Главная</Button>
                     <Button color="inherit" component={Link} to="/media">Медиа</Button>
+                    {userRole === 'ROLE_ADMIN' && (
+                        <Button color="inherit" component={Link} to="/users">Пользователи</Button>
+                    )}
                 </ButtonGroup>
 
                 <FormControl sx={{ marginLeft: 'auto', marginRight: 2 }}>

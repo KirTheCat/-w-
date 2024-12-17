@@ -7,6 +7,8 @@ import NavBar from './NavBar/NavBar';
 import { useDispatch, useSelector } from 'react-redux';
 import { setAuthenticatedUser, logoutUser } from '../redux/slicers/authSlice';
 import MediaInfo from "./pages/MediaInfo";
+import UsersTable from "./UsersTable";
+import UserInfo from "./UserInfo";
 
 function App({ handleThemeChange, themeName }) {
     const dispatch = useDispatch();
@@ -46,6 +48,8 @@ function App({ handleThemeChange, themeName }) {
                 <Route path="/" element={<Home />} />
                 <Route path="/media" element={<MediaList />} />
                 <Route path="/media/:id" element={<MediaInfo/>} />
+                <Route path="/users" element={<UsersTable />} />
+                <Route path="/users/:id" element={<UserInfo />} />
             </Routes>
         </BrowserRouter>
     );

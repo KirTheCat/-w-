@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Box, Typography, Card, CardContent, CircularProgress } from '@mui/material';
+import {API_BASE_URL} from "../../config/ApiConfig";
 
 const MediaInfo = () => {
     const { id } = useParams();
@@ -9,7 +10,7 @@ const MediaInfo = () => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        axios.get(`http://localhost:8081/media/${id}`)
+        axios.get(`${API_BASE_URL}/media/${id}`)
             .then(response => {
                 setMedia(response.data);
             })

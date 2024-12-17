@@ -1,10 +1,12 @@
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import NavBarContent from './NavBarContent';
+import { useSelector } from 'react-redux';
+import NavBarContent from "./NavBarContent";
 
 const NavBar = ({ isAuthenticated, user, handleLogout, handleThemeChange, themeName }) => {
     const location = useLocation();
     const navigate = useNavigate();
+    const userRole = useSelector(state => state.authState.user?.role);
 
     const handleLoginClick = () => {
         navigate('/login');
@@ -24,6 +26,7 @@ const NavBar = ({ isAuthenticated, user, handleLogout, handleThemeChange, themeN
             handleLogout={handleLogout}
             handleThemeChange={handleThemeChange}
             themeName={themeName}
+            userRole={userRole}
         />
     );
 };
