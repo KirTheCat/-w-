@@ -18,9 +18,9 @@ const useAuth = () => {
             const data = isSignUp ? { username, email, password } : { username, password };
             if (isSignUp) {
                 const signUpResult = await dispatch(signUpUser(data));
-                const signUpUnwrapped = unwrapResult(signUpResult);
+                unwrapResult(signUpResult);
                 const signInResult = await dispatch(signInUser({ username, password }));
-                const signInUnwrapped = unwrapResult(signInResult);
+                unwrapResult(signInResult);
                 setAlert(<Alert severity="success">Успешная регистрация и авторизация</Alert>);
                 setTimeout(() => {
                     setAlert(null);
@@ -28,7 +28,7 @@ const useAuth = () => {
                 }, 1000);
             } else {
                 const signInResult = await dispatch(signInUser(data));
-                const signInUnwrapped = unwrapResult(signInResult);
+                unwrapResult(signInResult);
                 setAlert(<Alert severity="success">Успешная авторизация</Alert>);
                 setTimeout(() => {
                     setAlert(null);

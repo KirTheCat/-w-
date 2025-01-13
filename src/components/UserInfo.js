@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import {Container, Typography, Card, CardContent, CircularProgress, Backdrop} from '@mui/material';
-import axios from 'axios';
-import { API_BASE_URL } from '../config/ApiConfig';
+import instance from "../config/axios";
 import {useSelector} from "react-redux";
 
 const UserInfo = () => {
@@ -10,25 +9,20 @@ const UserInfo = () => {
     const [user, setUser] = useState(null);
     const isAuthenticated = useSelector(state => state.authState.isAuthenticated);
     const userRole = useSelector(state => state.authState.user?.role);
-    const token = useSelector(state => state.authState.user?.token);
 
     useEffect(() => {
-        if (isAuthenticated && userRole === 'ROLE_ADMIN') {
-            const fetchUsers = async () => {
-                try {
-                    const response = await axios.get(`${API_BASE_URL}/users/${id}`, {
-                        headers: {
-                            'Authorization': `Bearer ${token}`
-                        }
-                    });
-                    setUser(response.data);
-                } catch (error) {
-                    console.error('Error fetching users:', error);
-                }
-            };
-            fetchUsers();
-        }
-    }, [isAuthenticated, userRole, token, id]);
+    if (isAuthenticated && userRole === 'ROLE_ADMIN') {
+        const fetchUser = async () => {
+            try {
+                const response = await instance.get(`/users/${id}`);
+                setUser(response.data);
+            } catch (error) {
+                console.error('Error fetching user:', error);
+            }
+        };
+        fetchUser();
+    }
+}, [isAuthenticated, userRole, id]);
 
     if (!user) {
         return <Backdrop

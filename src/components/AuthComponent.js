@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, TextField, Button, FormControlLabel, Switch } from '@mui/material';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
-import * as Yup from 'yup';
+import { Formik, Form, Field} from 'formik';
+import {string, object} from 'yup';
 import useAuth from '../hooks/useAuth';
 
 const AuthComponent = () => {
@@ -10,21 +10,18 @@ const AuthComponent = () => {
         setIsSignUp,
         alert,
         handleAuth,
-        usernameError,
-        emailError,
-        passwordError,
     } = useAuth();
 
     const handleToggle = () => {
         setIsSignUp(!isSignUp);
     };
 
-    const validationSchema = Yup.object().shape({
-        username: Yup.string().required('Имя пользователя не может быть пустым'),
+    const validationSchema = object().shape({
+        username: string().required('Имя пользователя не может быть пустым'),
         email: isSignUp
-            ? Yup.string().email('Неверный email').required('Email не может быть пустым')
-            : Yup.string().nullable(),
-        password: Yup.string().required('Пароль не может быть пустым'),
+            ? string().email('Неверный email').required('Email не может быть пустым')
+            : string().nullable(),
+        password: string().required('Пароль не может быть пустым'),
     });
 
     return (

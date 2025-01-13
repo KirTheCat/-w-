@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
 import { Box, Typography, Card, CardContent, CircularProgress } from '@mui/material';
-import {API_BASE_URL} from "../../config/ApiConfig";
+import instance from "../../config/axios";
 
 const MediaInfo = () => {
     const { id } = useParams();
@@ -10,13 +9,17 @@ const MediaInfo = () => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        axios.get(`${API_BASE_URL}/media/${id}`)
-            .then(response => {
+        const fetchMedia = async () => {
+            try {
+                const response = await instance.get(`/media/${id}`);
                 setMedia(response.data);
-            })
-            .catch(error => {
-                setError(error.message);
-            });
+            } catch (error) {
+                setError(error.message); // Обработка ошибки
+                console.error("Ошибка при получении медиа:", error);
+            }
+        };
+
+        fetchMedia();
     }, [id]);
 
     if (error) {

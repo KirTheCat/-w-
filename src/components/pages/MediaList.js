@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { Box, Typography, List, ListItem, Card, CardContent, CircularProgress } from '@mui/material';
+import { Box, Typography, List, ListItem, Card, CardContent, CircularProgress} from '@mui/material';
 import AddMediaButton from '../AddMedia';
-import {API_BASE_URL} from "../../config/ApiConfig";
+import instance from "../../config/axios";
 
 const MediaList = () => {
     const [media, setMedia] = useState([]);
@@ -11,15 +10,19 @@ const MediaList = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        axios.get(`${API_BASE_URL}/media`)
-            .then(response => {
+        const fetchMedia = async () => {
+            try {
+                const response = await instance.get(`/media`);
                 setMedia(response.data);
-            })
-            .catch(error => {
+            } catch (error) {
                 setError(error.message);
-            });
-    }, []);
+                console.error("Ошибка при получении медиа:", error);
+            }
+        };
 
+        fetchMedia();
+
+    }, []);
     const handleItemClick = (id) => {
         navigate(`/media/${id}`);
     };
@@ -50,7 +53,7 @@ const MediaList = () => {
                 {media.map(item => (
                     <ListItem
                         key={item.id}
-                        sx={{ margin: 2, cursor: 'pointer' }}
+                        sx={{ margin: 2, cursor: 'pointer', display: 'flex', justifyContent: 'space-between' }}
                         onClick={() => handleItemClick(item.id)}
                     >
                         <Card sx={{ width: '100%' }}>
@@ -70,6 +73,7 @@ const MediaList = () => {
                                 )}
                             </CardContent>
                         </Card>
+
                     </ListItem>
                 ))}
             </List>
