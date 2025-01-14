@@ -15,7 +15,7 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { useSelector } from 'react-redux';
-import { API_BASE_URL } from "../config/ApiConfig";
+import { API_BASE_URL } from "../../config/ApiConfig";
 import { object, string, number} from 'yup';
 
 const MediaModal = ({ open, handleClose, onMediaAdded }) => {

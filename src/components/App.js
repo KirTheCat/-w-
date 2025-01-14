@@ -1,14 +1,14 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Home from './pages/Home';
-import MediaList from './pages/MediaList';
+import HomePage from './pages/HomePage';
+import MediaPage from './pages/MediaPage';
 import AuthComponent from './AuthComponent';
-import NavBar from './NavBar/NavBar';
+import NavBar from './navBar/NavBar';
 import { useDispatch, useSelector } from 'react-redux';
 import {logoutUser } from '../redux/slicers/authSlice';
-import MediaInfo from "./pages/MediaInfo";
-import UsersTable from "./UsersTable";
-import UserInfo from "./UserInfo";
+import MediaInfo from "./media/MediaInfo";
+import UsersPage from "./pages/UsersPage";
+import UserInfo from "./user/UserInfo";
 
 function App({ handleThemeChange, themeName }) {
     const dispatch = useDispatch();
@@ -31,10 +31,10 @@ function App({ handleThemeChange, themeName }) {
             />
             <Routes>
                 <Route path='/login' element={<AuthComponent />} />
-                <Route path="/" element={<Home />} />
-                <Route path="/media" element={<MediaList />} />
+                <Route path="/" element={<HomePage />} />
+                <Route path="/media" element={<MediaPage />} />
                 <Route path="/media/:id" element={<MediaInfo/>} />
-                <Route path="/users" element={<UsersTable />} />
+                <Route path="/users" element={<UsersPage />} />
                 <Route path="/users/:id" element={<UserInfo />} />
             </Routes>
         </BrowserRouter>

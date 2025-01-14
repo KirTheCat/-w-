@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, Typography, List, ListItem, Card, CardContent, CircularProgress} from '@mui/material';
-import AddMediaButton from '../AddMedia';
+import AddMediaButton from '../media/AddMedia';
 import instance from "../../config/axios";
 
-const MediaList = () => {
+const MediaPage = () => {
     const [media, setMedia] = useState([]);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
@@ -81,4 +81,4 @@ const MediaList = () => {
     );
 };
 
-export default MediaList;
+export default MediaPage;

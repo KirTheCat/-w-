@@ -6,9 +6,9 @@ import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import { ClientSideRowModelModule } from 'ag-grid-community';
 import { useNavigate } from 'react-router-dom';
-import instance from "../config/axios";
+import instance from "../../config/axios";
 
-const UsersTable = () => {
+const UsersPage = () => {
     const isAuthenticated = useSelector(state => state.authState.isAuthenticated);
     const userRole = useSelector(state => state.authState.user?.role);
 
@@ -65,4 +65,4 @@ const UsersTable = () => {
     );
 };
 
-export default UsersTable;
+export default UsersPage;

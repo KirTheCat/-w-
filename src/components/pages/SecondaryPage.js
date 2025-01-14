@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Secondary = () => {
+const SecondaryPage = () => {
     return (
        <div>
            <h1>Второстепенная страница</h1>
@@ -10,4 +10,4 @@ const Secondary = () => {
     );
 };
 
-export default Secondary;
+export default SecondaryPage;

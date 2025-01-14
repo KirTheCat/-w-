@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { Container, Typography } from '@mui/material';
 
-const Home = () => {
+const HomePage = () => {
     const { isAuthenticated, user } = useSelector(state => state.authState);
 
     return (
@@ -23,4 +23,4 @@ const Home = () => {
     );
 };
 
-export default Home;
+export default HomePage;
