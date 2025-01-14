@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {useFormik} from 'formik';
+import React, { useState } from 'react';
+import { useFormik } from 'formik';
 import axios from 'axios';
 import {
     Dialog,
@@ -14,28 +14,54 @@ import {
     Alert
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import {useSelector} from 'react-redux';
-import {API_BASE_URL} from "../config/ApiConfig";
-import * as Yup from 'yup';
-const MediaModal = ({open, handleClose, onMediaAdded}) => {
+import { useSelector } from 'react-redux';
+import { API_BASE_URL } from "../config/ApiConfig";
+import { object, string, number} from 'yup';
+
+const MediaModal = ({ open, handleClose, onMediaAdded }) => {
     const [alert, setAlert] = useState(null);
     const authState = useSelector((state) => state.authState);
     const token = authState?.user?.token;
-    const validationSchema = Yup.object({
-        title: Yup.string().required('Название обязательно'),
-        genre: Yup.string().required('Жанр обязателен'),
-        director: Yup.string().required('Имя режиссёра обязательно').matches(/^[a-zA-Zа-яА-Я\s]+$/, 'Имя не должно содержать цифры'),
-        releaseYear: Yup.number().required('Год выхода обязателен').min(1914, 'Год выхода должен быть больше чем 1914').max(new Date().getFullYear(), 'Год выхода не может быть больше текущего'),
-        type: Yup.string().required('Тип обязателен'),
-        durationInMinutes: Yup.number().when('type', {
-            is: 'movie',
-            then: Yup.number().required('Продолжительность обязательна').min(1, 'Продолжительность должна быть больше 0')
-        }),
-        episodes: Yup.number().when('type', {
-            is: 'series',
-            then: Yup.number().required('Количество серий обязательно').min(1, 'Количество серий должно быть больше 0')
-        })
+
+    const validationSchema = object().shape({
+        title: string().required('Название обязательно'),
+        genre: string().required('Жанр обязателен'),
+        director: string()
+            .required('Имя режиссёра обязательно')
+            .matches(/^[a-zA-Zа-яА-Я\s]+$/, 'Имя не должно содержать цифры'),
+        releaseYear: number()
+            .required('Год выхода обязателен')
+            .min(1914, 'Год выхода должен быть больше чем 1914')
+            .max(new Date().getFullYear(), 'Год выхода не может быть больше текущего'),
+        type: string().required('Тип обязателен'),
+        durationInMinutes: number()
+            .when('type', {
+                is: (val) => val === 'movie',
+                then: number()
+                    .required('Продолжительность обязательна')
+                    .min(1, 'Продолжительность должна быть больше 0'),
+                otherwise: number().nullable(),
+            }),
+        episodes: number()
+            .when('type', {
+                is: (val) => val === 'series',
+                then: number()
+                    .required('Количество серий обязательна')
+                    .min(1, 'Количество серий должна быть больше 0'),
+                otherwise: number().nullable(),
+            }),
+
+        // episodes: number()
+        //     .when('type', {
+        //         is: (val) => val === 'series',
+        //         then: number()
+        //             .required('Количество серий обязательна')
+        //             .min(1, 'Количество серий должна быть больше 0'),
+        //         otherwise: number().nullable(),
+        //     }),
     });
+
+
     const formik = useFormik({
         initialValues: {
             title: '',
@@ -45,8 +71,10 @@ const MediaModal = ({open, handleClose, onMediaAdded}) => {
             type: 'movie',
             durationInMinutes: '',
             episodes: ''
-        }, validationSchema: validationSchema, onSubmit: (values) => {
-            const mediaData = {...values};
+        },
+        validationSchema: validationSchema,
+        onSubmit: (values) => {
+            const mediaData = { ...values };
             if (values.type === 'movie') {
                 mediaData.durationInMinutes = parseInt(values.durationInMinutes, 10);
                 delete mediaData.episodes;
@@ -54,15 +82,18 @@ const MediaModal = ({open, handleClose, onMediaAdded}) => {
                 mediaData.episodes = parseInt(values.episodes, 10);
                 delete mediaData.durationInMinutes;
             }
-            axios.post(`${API_BASE_URL}/media`, mediaData, {headers: {'Authorization': `Bearer ${token}`}}).then(response => {
+            axios.post(`${API_BASE_URL}/media`, mediaData, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            }).then(response => {
                 onMediaAdded(response.data);
-                setAlert({type: 'success', message: 'Добавлено'});
+                setAlert({ type: 'success', message: 'Добавлено' });
                 formik.resetForm();
             }).catch(error => {
-                setAlert({type: 'error', message: 'Ошибка: ' + error.message});
+                setAlert({ type: 'error', message: 'Ошибка: ' + error.message });
             });
         }
     });
+
     return (
         <Dialog open={open} onClose={handleClose}>
             <DialogTitle>
@@ -70,15 +101,15 @@ const MediaModal = ({open, handleClose, onMediaAdded}) => {
                 <IconButton
                     aria-label="close"
                     onClick={handleClose}
-                    sx={{position: 'absolute', right: 8, top: 8}}
+                    sx={{ position: 'absolute', right: 8, top: 8 }}
                 >
-                    <CloseIcon/>
+                    <CloseIcon />
                 </IconButton>
             </DialogTitle>
             <form onSubmit={formik.handleSubmit} onReset={formik.handleReset}>
                 <DialogContent>
                     {alert && (
-                        <Alert severity={alert.type} sx={{mb: 2}}>
+                        <Alert severity={alert.type} sx={{ mb: 2 }}>
                             {alert.message}
                         </Alert>
                     )}
@@ -91,6 +122,8 @@ const MediaModal = ({open, handleClose, onMediaAdded}) => {
                         fullWidth
                         value={formik.values.title}
                         onChange={formik.handleChange}
+                        error={formik.touched.title && Boolean(formik.errors.title)}
+                        helperText={formik.touched.title && formik.errors.title}
                     />
                     <TextField
                         margin="dense"
@@ -100,6 +133,8 @@ const MediaModal = ({open, handleClose, onMediaAdded}) => {
                         fullWidth
                         value={formik.values.genre}
                         onChange={formik.handleChange}
+                        error={formik.touched.genre && Boolean(formik.errors.genre)}
+                        helperText={formik.touched.genre && formik.errors.genre}
                     />
                     <TextField
                         margin="dense"
@@ -109,6 +144,8 @@ const MediaModal = ({open, handleClose, onMediaAdded}) => {
                         fullWidth
                         value={formik.values.director}
                         onChange={formik.handleChange}
+                        error={formik.touched.director && Boolean(formik.errors.director)}
+                        helperText={formik.touched.director && formik.errors.director}
                     />
                     <TextField
                         margin="dense"
@@ -118,13 +155,15 @@ const MediaModal = ({open, handleClose, onMediaAdded}) => {
                         fullWidth
                         value={formik.values.releaseYear}
                         onChange={formik.handleChange}
+                        error={formik.touched.releaseYear && Boolean(formik.errors.releaseYear)}
+                        helperText={formik.touched.releaseYear && formik.errors.releaseYear}
                     />
                     <Select
                         name="type"
                         value={formik.values.type}
                         onChange={formik.handleChange}
                         fullWidth
-                        sx={{margin: '16px 0'}}
+                        sx={{ margin: '16px 0' }}
                     >
                         <MenuItem value="movie">Фильм</MenuItem>
                         <MenuItem value="series">Сериал</MenuItem>
@@ -138,6 +177,8 @@ const MediaModal = ({open, handleClose, onMediaAdded}) => {
                             fullWidth
                             value={formik.values.durationInMinutes}
                             onChange={formik.handleChange}
+                            error={formik.touched.durationInMinutes && Boolean(formik.errors.durationInMinutes)}
+                            helperText={formik.touched.durationInMinutes && formik.errors.durationInMinutes}
                         />
                     )}
                     {formik.values.type === 'series' && (
@@ -149,6 +190,8 @@ const MediaModal = ({open, handleClose, onMediaAdded}) => {
                             fullWidth
                             value={formik.values.episodes}
                             onChange={formik.handleChange}
+                            error={formik.touched.episodes && Boolean(formik.errors.episodes)}
+                            helperText={formik.touched.episodes && formik.errors.episodes}
                         />
                     )}
                 </DialogContent>
