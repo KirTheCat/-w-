@@ -37,19 +37,20 @@ const MediaModal = ({ open, handleClose, onMediaAdded }) => {
         durationInMinutes: number()
             .when('type', {
                 is: (val) => val === 'movie',
-                then: number()
+                then: (schema) => schema
                     .required('Продолжительность обязательна')
                     .min(1, 'Продолжительность должна быть больше 0'),
-                otherwise: number().nullable(),
+                otherwise: (schema) => schema.nullable(),
             }),
         episodes: number()
             .when('type', {
                 is: (val) => val === 'series',
-                then: number()
+                then: (schema) => schema
                     .required('Количество серий обязательна')
                     .min(1, 'Количество серий должна быть больше 0'),
-                otherwise: number().nullable(),
+                otherwise: (schema) => schema.nullable(),
             }),
+    });
 
         // episodes: number()
         //     .when('type', {
@@ -59,7 +60,7 @@ const MediaModal = ({ open, handleClose, onMediaAdded }) => {
         //             .min(1, 'Количество серий должна быть больше 0'),
         //         otherwise: number().nullable(),
         //     }),
-    });
+
 
 
     const formik = useFormik({
