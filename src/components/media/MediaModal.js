@@ -1,6 +1,4 @@
-import React, { useState } from 'react';
-import { useFormik } from 'formik';
-import axios from 'axios';
+import React from 'react';
 import {
     Dialog,
     DialogTitle,
@@ -14,86 +12,10 @@ import {
     Alert
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { useSelector } from 'react-redux';
-import { API_BASE_URL } from "../../config/ApiConfig";
-import { object, string, number} from 'yup';
+import useMediaForm from '../../hooks/useMediaForm';
 
 const MediaModal = ({ open, handleClose, onMediaAdded }) => {
-    const [alert, setAlert] = useState(null);
-    const authState = useSelector((state) => state.authState);
-    const token = authState?.user?.token;
-
-    const validationSchema = object().shape({
-        title: string().required('Название обязательно'),
-        genre: string().required('Жанр обязателен'),
-        director: string()
-            .required('Имя режиссёра обязательно')
-            .matches(/^[a-zA-Zа-яА-Я\s]+$/, 'Имя не должно содержать цифры'),
-        releaseYear: number()
-            .required('Год выхода обязателен')
-            .min(1914, 'Год выхода должен быть больше чем 1914')
-            .max(new Date().getFullYear(), 'Год выхода не может быть больше текущего'),
-        type: string().required('Тип обязателен'),
-        durationInMinutes: number()
-            .when('type', {
-                is: (val) => val === 'movie',
-                then: (schema) => schema
-                    .required('Продолжительность обязательна')
-                    .min(1, 'Продолжительность должна быть больше 0'),
-                otherwise: (schema) => schema.nullable(),
-            }),
-        episodes: number()
-            .when('type', {
-                is: (val) => val === 'series',
-                then: (schema) => schema
-                    .required('Количество серий обязательна')
-                    .min(1, 'Количество серий должна быть больше 0'),
-                otherwise: (schema) => schema.nullable(),
-            }),
-    });
-
-        // episodes: number()
-        //     .when('type', {
-        //         is: (val) => val === 'series',
-        //         then: number()
-        //             .required('Количество серий обязательна')
-        //             .min(1, 'Количество серий должна быть больше 0'),
-        //         otherwise: number().nullable(),
-        //     }),
-
-
-
-    const formik = useFormik({
-        initialValues: {
-            title: '',
-            genre: '',
-            director: '',
-            releaseYear: '',
-            type: 'movie',
-            durationInMinutes: '',
-            episodes: ''
-        },
-        validationSchema: validationSchema,
-        onSubmit: (values) => {
-            const mediaData = { ...values };
-            if (values.type === 'movie') {
-                mediaData.durationInMinutes = parseInt(values.durationInMinutes, 10);
-                delete mediaData.episodes;
-            } else if (values.type === 'series') {
-                mediaData.episodes = parseInt(values.episodes, 10);
-                delete mediaData.durationInMinutes;
-            }
-            axios.post(`${API_BASE_URL}/media`, mediaData, {
-                headers: { 'Authorization': `Bearer ${token}` }
-            }).then(response => {
-                onMediaAdded(response.data);
-                setAlert({ type: 'success', message: 'Добавлено' });
-                formik.resetForm();
-            }).catch(error => {
-                setAlert({ type: 'error', message: 'Ошибка: ' + error.message });
-            });
-        }
-    });
+    const { formik, alert } = useMediaForm(onMediaAdded);
 
     return (
         <Dialog open={open} onClose={handleClose}>

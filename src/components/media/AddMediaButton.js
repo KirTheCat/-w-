@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { IconButton } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import MediaModal from './MediaModal'; // Импортируем компонент модального окна
+import MediaModal from './MediaModal';
 
 const AddMediaButton = ({ onMediaAdded }) => {
     const [open, setOpen] = useState(false);

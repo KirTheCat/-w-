@@ -1,13 +1,13 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import HomePage from './pages/HomePage';
-import MediaPage from './pages/MediaPage';
+import HomePage from '../pages/HomePage';
+import MediaPage from '../pages/MediaPage';
 import AuthComponent from './AuthComponent';
 import NavBar from './navBar/NavBar';
 import { useDispatch, useSelector } from 'react-redux';
 import {logoutUser } from '../redux/slicers/authSlice';
-import MediaInfo from "./media/MediaInfo";
-import UsersPage from "./pages/UsersPage";
+import MediaItem from "./media/MediaItem";
+import UsersPage from "../pages/UsersPage";
 import UserInfo from "./user/UserInfo";
 
 function App({ handleThemeChange, themeName }) {
@@ -33,7 +33,7 @@ function App({ handleThemeChange, themeName }) {
                 <Route path='/login' element={<AuthComponent />} />
                 <Route path="/" element={<HomePage />} />
                 <Route path="/media" element={<MediaPage />} />
-                <Route path="/media/:id" element={<MediaInfo/>} />
+                <Route path="/media/:id" element={<MediaItem/>} />
                 <Route path="/users" element={<UsersPage />} />
                 <Route path="/users/:id" element={<UserInfo />} />
             </Routes>

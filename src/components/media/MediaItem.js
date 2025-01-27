@@ -1,54 +1,31 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Box, Typography, Card, CardContent, CircularProgress, Button, Rating, List } from '@mui/material';
-import instance from "../../config/axios";
-import Comment from './Comment';
+import Comments from './Comments';
 import AddComment from './AddComment';
+import AddEpisodeForm from './AddEpisodeForm';
+import useMedia from '../../hooks/useMedia';
+import { useSelector } from "react-redux";
 
-const MediaInfo = () => {
+const MediaItem = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const [media, setMedia] = useState(null);
-    const [reviews, setReviews] = useState([]);
-    const [averageRating, setAverageRating] = useState(0);
-    const [error, setError] = useState(null);
+    const { media, reviews, averageRating, error, fetchReviews, fetchAverageRating } = useMedia(id);
+    const isAuthenticated = useSelector((state) => state.authState.isAuthenticated);
+    const authState = useSelector((state) => state.authState);
+    const isAdmin = authState?.user?.role === 'ROLE_ADMIN';
+    const [open, setOpen] = useState(false);
 
-    const fetchMedia = useCallback(async () => {
-        try {
-            const response = await instance.get(`/media/${id}`);
-            setMedia(response.data);
-        } catch (error) {
-            setError(error.message);
-            console.error("Ошибка при получении медиа:", error);
-        }
-    }, [id]);
+    const handleClickOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
+    const handleEpisodeAdded = () => {
+        handleClose();
+    };
 
-    const fetchReviews = useCallback(async () => {
-        try {
-            const response = await instance.get(`/media/${id}/reviews`);
-            setReviews(response.data);
-        } catch (error) {
-            console.error("Ошибка при получении отзывов:", error);
-        }
-    }, [id]);
-
-    const fetchAverageRating = useCallback(async () => {
-        try {
-            const response = await instance.get(`/media/${id}/average_rating`);
-            const ratingString = response.data;
-            const match = ratingString.match(/Средний рейтинг:\s*(\d+(\.\d+)?)/);
-            const average = match ? parseFloat(match[1]) : 0;
-            setAverageRating(average);
-        } catch (error) {
-            console.error("Ошибка при получении среднего рейтинга:", error);
-        }
-    }, [id]);
-
-    useEffect(() => {
-        fetchMedia();
+    const handleCommentAdded = () => {
         fetchReviews();
         fetchAverageRating();
-    }, [fetchMedia, fetchReviews, fetchAverageRating]);
+    };
 
     if (error) {
         return <Typography color="error">Ошибка: {error}</Typography>;
@@ -62,15 +39,10 @@ const MediaInfo = () => {
         );
     }
 
-    const handleCommentAdded = () => {
-        fetchReviews();
-        fetchAverageRating();
-    };
-
     return (
         <Box sx={{ padding: 2 }}>
             <Button variant="contained" onClick={() => navigate(-1)} sx={{ marginBottom: 2 }}>
-                Вернуться
+                Назад
             </Button>
             <Card sx={{ maxWidth: 600, margin: '0 auto', padding: 2 }}>
                 <CardContent>
@@ -93,18 +65,30 @@ const MediaInfo = () => {
                         {reviews.length > 0 ? (
                             <List>
                                 {reviews.map((review, index) => (
-                                    <Comment key={index} comment={review} />
+                                    <Comments key={index} comment={review} />
                                 ))}
                             </List>
                         ) : (
                             <Typography variant="body2">Отзывов пока нет.</Typography>
                         )}
                     </Box>
-                    <AddComment mediaId={id} onCommentAdded={handleCommentAdded} />
+                    {!isAuthenticated?
+                        (<Typography>Чтобы оставлять комментарии требуется авторизация</Typography>):
+                        (<AddComment mediaId={id} onCommentAdded={handleCommentAdded} />)
+                    }
+
+                    {media.type === 'series' && isAdmin && (
+                        <>
+                            <Button variant="outlined" color="primary" onClick={handleClickOpen}>
+                                Добавить эпизод
+                            </Button>
+                            <AddEpisodeForm open={open} handleClose={handleClose} seriesId={media.id} onEpisodeAdded={handleEpisodeAdded} />
+                        </>
+                    )}
                 </CardContent>
             </Card>
         </Box>
     );
 };
 
-export default MediaInfo;
+export default MediaItem;
