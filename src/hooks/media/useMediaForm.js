@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useFormik } from 'formik';
 import { useSelector } from 'react-redux';
 import { object, string, number } from 'yup';
-import instance from '../config/axios';
+import instance from '../../config/axios';
 
 const useMediaForm = (onMediaAdded) => {
     const [alert, setAlert] = useState(null);
@@ -34,6 +34,18 @@ const useMediaForm = (onMediaAdded) => {
             }),
     });
 
+    const formatMediaData = (values) => {
+        const mediaData = { ...values };
+        if (values.type === 'movie') {
+            mediaData.durationInMinutes = parseInt(values.durationInMinutes, 10);
+            delete mediaData.episodes;
+        } else if (values.type === 'series') {
+            mediaData.episodes = parseInt(values.episodes, 10);
+            delete mediaData.durationInMinutes;
+        }
+        return mediaData;
+    };
+
     const formik = useFormik({
         initialValues: {
             title: '',
@@ -45,24 +57,18 @@ const useMediaForm = (onMediaAdded) => {
             episodes: ''
         },
         validationSchema: validationSchema,
-        onSubmit: (values) => {
-            const mediaData = { ...values };
-            if (values.type === 'movie') {
-                mediaData.durationInMinutes = parseInt(values.durationInMinutes, 10);
-                delete mediaData.episodes;
-            } else if (values.type === 'series') {
-                mediaData.episodes = parseInt(values.episodes, 10);
-                delete mediaData.durationInMinutes;
-            }
-            instance.post(`/media`, mediaData, {
-                headers: { 'Authorization': `Bearer ${token}` }
-            }).then(response => {
+        onSubmit: async (values) => {
+            const mediaData = formatMediaData(values);
+            try {
+                const response = await instance.post(`/media`, mediaData, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
                 onMediaAdded(response.data);
                 setAlert({ type: 'success', message: 'Добавлено' });
                 formik.resetForm();
-            }).catch(error => {
+            } catch (error) {
                 setAlert({ type: 'error', message: 'Ошибка: ' + error.message });
-            });
+            }
         }
     });
 

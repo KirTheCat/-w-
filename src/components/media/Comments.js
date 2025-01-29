@@ -1,13 +1,12 @@
 import React from 'react';
 import { Box, Avatar, Typography, Rating } from '@mui/material';
-import useMedia from '../../hooks/useMedia';
-
+import { ratingEnumToValue } from '../../utils/ratingUtils';
+import { getColorFromString, getContrastingColor } from '../../utils/avatarUtils';
 const Comments = ({ comment }) => {
-    const { ratingEnumToValue, getColorFromString, getContrastingColor } = useMedia();
     const avatarColor = getColorFromString(comment.authorInfo);
     const textColor = getContrastingColor(avatarColor);
     const initial = comment.authorInfo.charAt(14).toUpperCase();
-    const ratingValue = ratingEnumToValue[comment.rating];
+    const ratingValue = ratingEnumToValue[comment.rating] || 0;
 
     return (
         <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: 2 }}>

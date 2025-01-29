@@ -1,6 +1,6 @@
 import React from 'react';
 import {Box, TextField, Button, Rating, Typography} from '@mui/material';
-import useMedia from '../../hooks/useMedia';
+import useMedia from '../../hooks/media/useMedia';
 
 const AddComment = ({ mediaId, onCommentAdded }) => {
     const { text, setText, rating, setRating, handleSubmit } = useMedia();

@@ -1,12 +1,12 @@
 import React from 'react';
 import { Box, Typography, CircularProgress } from '@mui/material';
-import useMedia from '../hooks/useMedia';
+import useMediaList from '../hooks/media/useMediaList';
 import AddMediaButton from "../components/media/AddMediaButton";
 import MediaList from "../components/media/MediaList";
 
 
 const MediaPage = () => {
-    const { media, setMedia, error } = useMedia();
+    const { media, setMedia, error } = useMediaList();
 
     const handleMediaAdded = (newMedia) => {
         setMedia([...media, newMedia]);
